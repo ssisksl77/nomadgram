@@ -2,9 +2,20 @@ from rest_framework import serializers
 from . import models
 from nomadgram.users import models as user_models
 
+
+class FeedUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = user_models.User
+        fields = (
+            'username',
+            'profile_image',
+        )
+
+
 class CommnetSerializer(serializers.ModelSerializer):
 
-    # image = ImageSerializer()
+    creator = FeedUserSerializer()
 
     class Meta:
         model = models.Comment
@@ -23,14 +34,7 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FeedUserSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = user_models.User
-        fields = (
-            'username',
-            'profile_image',
-        )
 
 class ImageSerializer(serializers.ModelSerializer):
 
