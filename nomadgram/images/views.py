@@ -26,7 +26,7 @@ class Feed(APIView):
 
 class LikeImage(APIView):
 
-    def get(self, request, image_id, format=None):
+    def post(self, request, image_id, format=None):
 
         user = request.user
         try:
@@ -49,3 +49,38 @@ class LikeImage(APIView):
             )
             new_like.save()
             return Response(status=status.HTTP_201_CREATED)  # return Response(status=200)
+
+
+class CommentOnImage(APIView):
+
+    def post(self, request, image_id, format=None):
+        user = request.user
+        res = None
+        try:
+            found_image = models.Image.objects.get(id=image_id)
+        except models.Image.DoesNotExist:
+            res = {'status': status.HTTP_404_NOT_FOUND}
+        else:
+            serializer = serializers.CommnetSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save(creator=user, image=found_image)
+                res = {'data': serializer.data, 'status': status.HTTP_200_OK}
+            else:
+                res = {'data': serializer.errors, 'status': status.HTTP_400_BAD_REQUES}
+
+        return Response(**res)
+
+
+class Comment(APIView):
+    def delete(self, request, comment_id, format=None):
+        user = request.user
+
+        try:
+            comment = models.Comment.objects.get(id=comment_id, creator=user)
+            comment.delete()
+            res = {'status': status.HTTP_204_NO_CONTENT}
+        except models.Comment.DoesNotExist:
+            res = {'status': status.HTTP_404_NOT_FOUND}
+
+        return Response(**res)
