@@ -39,6 +39,7 @@ importmagic = "*"
 epc = "*"
 yapf = "*"
 elpy = "*"
+django-taggit = "*"
 
 
 [dev-packages]

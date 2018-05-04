@@ -27,5 +27,10 @@ urlpatterns = [
         name='comment'
     ),
     path('<int:image_id>/comments/', views.CommentOnImage.as_view()),
+    url(
+        regex=r'^search/$',
+        views=views.Search.as_view(),
+        name='search' 
+    ),
 
 ]

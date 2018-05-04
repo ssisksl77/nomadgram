@@ -1,7 +1,7 @@
 from django.db import models
 from nomadgram.users import models as user_models
 from django.utils.encoding import python_2_unicode_compatible
-
+from taggit.managers import TaggableManager
 
 # abstract 클래스는 데이터베이스와 직접연결되지 않는다.
 @python_2_unicode_compatible
@@ -29,6 +29,7 @@ class Image(TimeStampedModel):
     caption = models.TextField()
     creator = models.ForeignKey(
         user_models.User, null=True, on_delete=models.CASCADE, related_name='images')
+    tags = TaggableManager()
 
     @property
     def like_count(self):
@@ -68,3 +69,5 @@ class Like(TimeStampedModel):
 
     def __str__(self):
         return 'User: {} - Image Caption: {}'.format(self.creator.username, self.image.caption)
+
+ 
